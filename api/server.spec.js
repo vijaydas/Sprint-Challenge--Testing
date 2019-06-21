@@ -12,9 +12,9 @@ describe("test POST /games", () => {
     await db("games").truncate();
   });
 
-// status 201
-  
-it("Return status 201 if successful", async () => {
+  // ... status 201
+
+  it("Return status 201 if successful", async () => {
     const newGame = {
       title: "Spock Lives",
       genre: "PS5",
@@ -27,25 +27,51 @@ it("Return status 201 if successful", async () => {
     expect(response.status).toBe(201);
   });
 
-// status 422
+  // ... status 422
 
   it("Return status 422 if request is missing data", async () => {
-    const newGame = {
-      title: null,
-      genre: null,
-      releaseYear: "1999"
-    };
+    const newGame = {};
 
     const response = await request(server)
       .post("/games")
-      .type("JSON")
-      .send(newGame)
-      .set("Accept", "application/json");
-
+      .send(newGame);
     expect(response.status).toBe(422);
   });
 
+  // ... return JSON
 
+  it("Returns JSON", async () => {
+    const response = await request(server).get("/games");
+    expect(response.type).toBe("application/json");
+  });
 });
 
-// test GET
+// test GET responses
+
+describe("test GET /games", () => {
+  afterEach(async () => {
+    await db("games").truncate();
+  });
+
+  // ... status 200
+
+  it("Return status 200 if successful", async () => {
+    const response = await request(server).get("/games");
+    expect(response.status).toBe(200);
+  });
+
+  // ... return JSON
+
+  it("Returns JSON", async () => {
+    const response = await request(server).get("/games");
+    expect(response.type).toBe("application/json");
+  });
+
+  // ... returns Array
+
+  it("Returns an array of games", async () => {
+      const response = await request(server).get("/games");
+
+      expect(Array.isArray(response.body)).toBe(true);
+  });
+});
