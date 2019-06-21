@@ -38,12 +38,15 @@ describe("test POST /games", () => {
     expect(response.status).toBe(422);
   });
 
+  
   // ... return JSON
 
   it("Returns JSON", async () => {
-    const response = await request(server).get("/games");
+    const response = await request(server).post("/games");
     expect(response.type).toBe("application/json");
   });
+
+  
 });
 
 // test GET responses
